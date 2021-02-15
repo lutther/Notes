@@ -1,68 +1,36 @@
 package com.example.notes
 
+import android.app.Activity
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.notes.databinding.ActivityMainBinding
-import com.example.notes.db.NoteDao
-import com.example.notes.db.NoteDatabase
-import com.example.notes.repo.NoteRepo
-import com.example.notes.ui.NoteViewModel
-import com.example.notes.ui.NoteViewModelFactory
-import com.example.notes.ui.RecyclerViewAdapter
-import com.example.notes.ui.WriteNote
-import kotlinx.android.synthetic.main.list_items.*
 
-abstract class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var noteViewModel: NoteViewModel
-
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val bind = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(bind.root)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setContentView(binding.root)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragementHolder) as NavHostFragment
+        navController = navHost.findNavController()
 
-        val dao: NoteDao = NoteDatabase.getInstance(application).noteDao
-        val repo = NoteRepo(dao)
-        val factory = NoteViewModelFactory(repo)
-        noteViewModel = ViewModelProvider(this, factory).get(NoteViewModel::class.java)
-        binding.viewModel = noteViewModel
-        binding.lifecycleOwner = this
+        setupActionBarWithNavController(navController)
 
-//        val writeNote = WriteNote()
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(R.id.fragementHolder, writeNote)
-//        }
+        }
 
-        recyclerView()
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
-
-    private fun recyclerView() {
-        binding.noteRecyclerView.layoutManager = LinearLayoutManager(this)
-        noteList()
-    }
-
-    private fun noteList() {
-        noteViewModel.note.observe(this, Observer {
-            binding.noteRecyclerView.adapter = RecyclerViewAdapter(it)
-        })
-    }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (item.itemId == R.id.new_note) {
-//            openWr
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
 }
+
+const val ADD_NOTE_RESULT = Activity.RESULT_FIRST_USER
+const val EDIT_NOTE_RESULT = Activity.RESULT_FIRST_USER + 1

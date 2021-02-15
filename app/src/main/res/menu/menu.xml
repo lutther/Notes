@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/new_note"
-        android:icon="@drawable/note_add"
-        android:title="add_note"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        android:iconTint="#FFFFFF"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_delete"
+        android:title="Delete"
+        android:iconTint="#FFFFFF"
+        app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/ic__sort"
+        android:title="Sort"
+        app:showAsAction="always"
+        android:iconTint="#FFFFFF">
+
+        <menu>
+            <item
+                android:id="@+id/sort_by_name"
+                android:title="Sort by name"/>
+
+            <item
+                android:id="@+id/sort_by_date"
+                android:title="Sort by date"/>
+        </menu>
+    </item>
 </menu>

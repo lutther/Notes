@@ -1,6 +1,6 @@
 package com.example.notes.db
 
-import android.content.Context
+import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,17 +14,15 @@ abstract class NoteDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: NoteDatabase? = null
 
-        fun getInstance(context: Context): NoteDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        NoteDatabase::class.java,
-                        "notes_database"
-                    ).build()
-                }
-                return instance
+        fun getInstance(context: Application?): NoteDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context!!.applicationContext,
+                    NoteDatabase::class.java,
+                    "notes_database"
+                ).build()
+                INSTANCE = instance
+                instance
             }
         }
     }
